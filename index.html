@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эзотерика Дейли — Гороскопы, Таро, Руны, Нумерология, Натальная карта в Telegram</title>
+    <meta name="description" content="Бесплатный Telegram-бот: ежедневные гороскопы, 6+ раскладов Таро, руны, нумерология, натальная карта, Кельтский крест. Более 20 функций для самопознания и предсказаний.">
+    <meta name="keywords" content="гороскоп онлайн, таро бесплатно, расклад таро, руны, нумерология, натальная карта, telegram бот, эзотерика, кельтский крест, карта дня, руна дня, совместимость знаков">
+    <meta property="og:title" content="Эзотерика Дейли — Гороскопы, Таро, Руны в Telegram">
+    <meta property="og:description" content="20+ бесплатных функций: гороскопы, расклады Таро, руны, нумерология, натальная карта. Каждый день в Telegram.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ezoterika-daily.ru">
+    <meta property="og:image" content="https://ezoterika-daily.ru/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Эзотерика Дейли — Гороскопы и Таро в Telegram">
+    <meta name="twitter:description" content="Бесплатный бот: гороскопы, расклады Таро, руны, нумерология. Более 20 функций.">
+    <link rel="canonical" href="https://ezoterika-daily.ru">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0a0a1a">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2728;</text></svg>">
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Эзотерика Дейли",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Telegram",
+        "description": "Telegram-бот с гороскопами, раскладами Таро, рунами, нумерологией и натальной картой. Более 20 функций для самопознания.",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "RUB"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "247"
+        }
+    }
+    </script>
+
+    <style>
+        /* ═══════════════════════════════════════ */
+        /* RESET & BASE                            */
+        /* ═══════════════════════════════════════ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a1a;
+            --bg-card: #12122a;
+            --bg-card-hover: #1a1a3a;
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --purple-glow: rgba(139, 92, 246, 0.3);
+            --gold: #f5c542;
+            --gold-dim: rgba(245, 197, 66, 0.15);
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* STARS BACKGROUND ANIMATION              */
+        /* ═══════════════════════════════════════ */
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* NAVIGATION BAR                          */
+        /* ═══════════════════════════════════════ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 26, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            transition: background 0.3s;
+        }
+
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--purple-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple-light);
+        }
+
+        .nav-cta {
+            padding: 0.5rem 1.25rem;
+            background: var(--gradient-1);
+            color: #fff !important;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .nav-cta:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .navbar { padding: 0.75rem 1rem; }
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* HERO SECTION                            */
+        /* ═══════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 1.5rem 2rem;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+        }
+
+        .hero-logo {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--purple-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            color: var(--text-dim);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--gradient-1);
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 25px var(--purple-glow);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 40px var(--purple-glow);
+        }
+
+        .cta-button .arrow {
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .cta-button:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* FEATURES SECTION                        */
+        /* ═══════════════════════════════════════ */
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 5rem 1.5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.25s, border-color 0.25s, background 0.25s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--purple);
+            background: var(--bg-card-hover);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            color: var(--purple-light);
+        }
+
+        .feature-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            background: var(--gold-dim);
+            color: var(--gold);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* COMMANDS LIST                           */
+        /* ═══════════════════════════════════════ */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .cmd {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.9rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .cmd-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .cmd code {
+            color: var(--purple-light);
+            font-weight: 600;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        .cmd span {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* HOW IT WORKS                            */
+        /* ═══════════════════════════════════════ */
+        .steps {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            text-align: center;
+            max-width: 280px;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* REVIEWS                                 */
+        /* ═══════════════════════════════════════ */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .review-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .review-stars {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .review-text {
+            color: var(--text);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .review-author {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* PREMIUM SECTION                         */
+        /* ═══════════════════════════════════════ */
+        .premium-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(245, 197, 66, 0.05) 100%);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .premium-badge {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            background: var(--gold-dim);
+            color: var(--gold);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 850px;
+            margin: 2rem auto 0;
+        }
+
+        .plan-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: left;
+        }
+
+        .plan-card.premium {
+            border-color: var(--purple);
+            box-shadow: 0 0 30px var(--purple-glow);
+            position: relative;
+        }
+
+        .plan-card.premium::before {
+            content: "Популярный";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            padding: 0.2rem 0.75rem;
+            background: var(--gradient-2);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 12px;
+        }
+
+        .plan-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--purple-light);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-dim);
+        }
+
+        .plan-features {
+            list-style: none;
+        }
+
+        .plan-features li {
+            padding: 0.35rem 0;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .plan-features li::before {
+            content: "\2713 ";
+            color: var(--purple-light);
+            font-weight: 700;
+        }
+
+        .plan-features li.disabled::before {
+            content: "\2717 ";
+            color: #475569;
+        }
+
+        .plan-features li.disabled {
+            color: #475569;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* FAQ SECTION                             */
+        /* ═══════════════════════════════════════ */
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            color: var(--purple-light);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--purple-light);
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding-bottom: 1.25rem;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* CTA BOTTOM                              */
+        /* ═══════════════════════════════════════ */
+        .cta-bottom {
+            text-align: center;
+            padding: 5rem 1.5rem;
+        }
+
+        .cta-bottom h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .cta-bottom p {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* FOOTER                                  */
+        /* ═══════════════════════════════════════ */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer a {
+            color: var(--purple-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* RESPONSIVE                              */
+        /* ═══════════════════════════════════════ */
+        @media (max-width: 640px) {
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .commands-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Floating pulse animation for CTA */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 25px var(--purple-glow); }
+            50% { box-shadow: 0 4px 50px rgba(139, 92, 246, 0.5); }
+        }
+
+        .cta-button {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Animated stars background -->
+<canvas id="stars-canvas"></canvas>
+
+<div class="content">
+
+    <!-- ═══════════ NAVBAR ═══════════ -->
+    <nav class="navbar">
+        <a href="#home" class="nav-logo">&#x2728; Эзотерика Дейли</a>
+        <ul class="nav-links">
+            <li><a href="#features">Функции</a></li>
+            <li><a href="#commands">Команды</a></li>
+            <li><a href="#reviews">Отзывы</a></li>
+            <li><a href="#premium">Тарифы</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="https://t.me/ezoterika_daily_bot" target="_blank" class="nav-cta">Открыть бота</a></li>
+        </ul>
+    </nav>
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero" id="home">
+        <div class="hero-logo">&#x2728;</div>
+        <h1>Эзотерика Дейли</h1>
+        <p class="tagline">Гороскопы &bull; Таро &bull; Руны &bull; Нумерология &bull; Натальная карта &mdash; каждый день в Telegram</p>
+        <a href="https://t.me/ezoterika_daily_bot" class="cta-button" target="_blank" rel="noopener">
+            Открыть бота бесплатно <span class="arrow">&rarr;</span>
+        </a>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-number" id="counter-func">20+</div>
+                <div class="stat-label">Функций</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">78</div>
+                <div class="stat-label">Карт Таро</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">24</div>
+                <div class="stat-label">Руны</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Знаков зодиака</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FEATURES ═══════════ -->
+    <section class="section" id="features">
+        <h2 class="section-title">Что умеет бот</h2>
+        <p class="section-subtitle">Более 20 инструментов для самопознания, предсказаний и духовного развития</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#x2B50;</div>
+                <h3>Ежедневные гороскопы</h3>
+                <p>Персональный гороскоп на каждый день и на неделю для вашего знака зодиака. Подписка на автоматическую рассылку в 9:00. Лунный календарь.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F0CF;</div>
+                <div class="feature-tag">6 раскладов</div>
+                <h3>Расклады Таро</h3>
+                <p>Карта дня, Кельтский крест (10 карт), расклады на любовь, карьеру, финансы, гадание Да/Нет. 78 карт с авторскими иллюстрациями.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x16A0;</div>
+                <h3>Руны</h3>
+                <p>Руна дня и расклад из трёх рун. Старший Футарк &mdash; 24 руны с глубокими интерпретациями. Древняя скандинавская мудрость.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F522;</div>
+                <h3>Нумерология</h3>
+                <p>Число судьбы по дате рождения и число имени. Узнайте, какие вибрации управляют вашей жизнью и как использовать их силу.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F30C;</div>
+                <div class="feature-tag">Premium</div>
+                <h3>Натальная карта</h3>
+                <p>Полный расчёт по дате, времени и месту рождения: Солнце, Луна, Асцендент, Меркурий, Венера, Марс. Подробная интерпретация каждого аспекта.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F52E;</div>
+                <h3>Магический шар и Хиромантия</h3>
+                <p>Задайте вопрос магическому шару. Проверьте совместимость знаков. Узнайте факт дня о линиях на ладони. Мистический совет дня.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F4D6;</div>
+                <div class="feature-tag">Новинка</div>
+                <h3>Дневник предсказаний</h3>
+                <p>Все ваши расклады сохраняются автоматически. Листайте историю, отслеживайте тенденции, находите свою любимую карту.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F91D;</div>
+                <div class="feature-tag">Новинка</div>
+                <h3>Реферальная программа</h3>
+                <p>Пригласите друга &mdash; получите 7 дней Premium бесплатно! Делитесь ботом с близкими и получайте бонусы. 5 друзей = месяц Premium.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ COMMANDS LIST ═══════════ -->
+    <section class="section" id="commands">
+        <h2 class="section-title">Все команды бота</h2>
+        <p class="section-subtitle">Полный список из 20+ команд &mdash; всё в одном боте</p>
+
+        <div class="commands-grid">
+            <div class="cmd"><span class="cmd-icon">&#x2B50;</span><div><code>/horoscope</code><br><span>Гороскоп на сегодня</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F4C5;</span><div><code>/weekly</code><br><span>Гороскоп на неделю</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F0CF;</span><div><code>/tarot</code><br><span>Карта дня Таро</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x271E;</span><div><code>/celtic</code><br><span>Кельтский крест</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x2764;</span><div><code>/tarot_love</code><br><span>Расклад на любовь</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F4BC;</span><div><code>/tarot_work</code><br><span>Расклад на карьеру</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F4B0;</span><div><code>/tarot_money</code><br><span>Расклад на финансы</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x2753;</span><div><code>/tarot_yn</code><br><span>Гадание Да/Нет</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x16A0;</span><div><code>/rune</code><br><span>Руна дня</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x16A2;</span><div><code>/rune_reading</code><br><span>Расклад 3 руны</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F522;</span><div><code>/numerology</code><br><span>Число судьбы</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F524;</span><div><code>/name_number</code><br><span>Число имени</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F319;</span><div><code>/moon</code><br><span>Лунный календарь</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F52E;</span><div><code>/magic_ball</code><br><span>Магический шар</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F4AB;</span><div><code>/advice</code><br><span>Совет дня</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x270B;</span><div><code>/palm</code><br><span>Хиромантия</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F495;</span><div><code>/compatibility</code><br><span>Совместимость</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F30C;</span><div><code>/natal</code><br><span>Натальная карта</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F4D6;</span><div><code>/diary</code><br><span>Дневник</span></div></div>
+            <div class="cmd"><span class="cmd-icon">&#x1F381;</span><div><code>/ref</code><br><span>Реферальная ссылка</span></div></div>
+        </div>
+    </section>
+
+    <!-- ═══════════ HOW IT WORKS ═══════════ -->
+    <section class="section">
+        <h2 class="section-title">Как это работает</h2>
+        <p class="section-subtitle">Три шага до вашего первого предсказания</p>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Откройте бота</h3>
+                <p>Нажмите кнопку выше или найдите @ezoterika_daily_bot в Telegram</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Выберите знак</h3>
+                <p>Укажите свой знак зодиака для персональных прогнозов</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Получайте прогнозы</h3>
+                <p>Используйте любые команды или подпишитесь на ежедневную рассылку в 9:00</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ REVIEWS ═══════════ -->
+    <section class="section" id="reviews">
+        <h2 class="section-title">Отзывы пользователей</h2>
+        <p class="section-subtitle">Что говорят те, кто уже пользуется ботом</p>
+
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="review-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+                <div class="review-text">&laquo;Каждое утро начинаю с гороскопа и карты дня. Удивительно, как точно совпадает с тем, что происходит! Кельтский крест &mdash; вообще шедевр.&raquo;</div>
+                <div class="review-author">&mdash; Анна, 28 лет</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+                <div class="review-text">&laquo;Подруга скинула ссылку, теперь вся наша компания проверяет совместимость. А нумерология числа имени &mdash; попадание в точку!&raquo;</div>
+                <div class="review-author">&mdash; Мария, 24 года</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+                <div class="review-text">&laquo;Натальная карта просто космос! Описание характера настолько точное, как будто меня знают лично. Пользуюсь каждый день.&raquo;</div>
+                <div class="review-author">&mdash; Дмитрий, 31 год</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+                <div class="review-text">&laquo;Руны открыли для меня новый мир. Каждый день вытягиваю руну &mdash; помогает настроиться и понять, на что обратить внимание.&raquo;</div>
+                <div class="review-author">&mdash; Елена, 35 лет</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+                <div class="review-text">&laquo;Самый удобный бот из всех, что пробовал. Всё в одном месте: гороскоп, таро, руны. Premium взял ради натальной карты &mdash; не пожалел!&raquo;</div>
+                <div class="review-author">&mdash; Алексей, 27 лет</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+                <div class="review-text">&laquo;Дневник предсказаний &mdash; гениальная штука! Перечитываю старые расклады и вижу, как они сбывались. Реферальная программа тоже огонь &mdash; пригласила 5 подруг и получила месяц бесплатно.&raquo;</div>
+                <div class="review-author">&mdash; Ксения, 22 года</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ PREMIUM ═══════════ -->
+    <section class="section" id="premium">
+        <div class="premium-section">
+            <div class="premium-badge">PREMIUM</div>
+            <h2 class="section-title">Выберите свой тариф</h2>
+            <p class="section-subtitle">Базовые функции бесплатны навсегда. Premium открывает полный потенциал.</p>
+
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <div class="plan-name">Free</div>
+                    <div class="plan-price">0 &#x20BD; <span>навсегда</span></div>
+                    <ul class="plan-features">
+                        <li>3 запроса в день</li>
+                        <li>Гороскоп и карта дня</li>
+                        <li>Руна дня</li>
+                        <li>Магический шар</li>
+                        <li>Совместимость знаков</li>
+                        <li class="disabled">Натальная карта</li>
+                        <li class="disabled">Кельтский крест безлимит</li>
+                        <li class="disabled">Дневник предсказаний</li>
+                    </ul>
+                </div>
+                <div class="plan-card premium">
+                    <div class="plan-name">Premium Месяц</div>
+                    <div class="plan-price">149 Stars <span>/ 30 дней</span></div>
+                    <ul class="plan-features">
+                        <li>Безлимитные запросы</li>
+                        <li>Все 6 раскладов Таро</li>
+                        <li>Кельтский крест</li>
+                        <li>Натальная карта</li>
+                        <li>Дневник предсказаний</li>
+                        <li>Голосовые ответы</li>
+                        <li>Расширенные интерпретации</li>
+                        <li>Без рекламы</li>
+                    </ul>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-name">Premium Год</div>
+                    <div class="plan-price">999 Stars <span>/ 365 дней</span></div>
+                    <ul class="plan-features">
+                        <li>Всё из Premium Месяц</li>
+                        <li>Экономия 55%</li>
+                        <li>Ранний доступ к новым функциям</li>
+                        <li>Лучшая цена</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; color: var(--text-dim); font-size: 0.85rem;">
+                &#x1F4A1; 1 Star &asymp; 1.8&#x20BD;. Оплата через Telegram &mdash; без карт и регистраций.
+                <br>Или пригласите 5 друзей и получите месяц Premium бесплатно!
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══════════ FAQ ═══════════ -->
+    <section class="section" id="faq">
+        <h2 class="section-title">Частые вопросы</h2>
+        <p class="section-subtitle">Ответы на популярные вопросы о боте</p>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    Бот действительно бесплатный?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Да! Базовые функции (3 расклада/гороскопа в день) полностью бесплатны и останутся такими навсегда. Premium открывает безлимитный доступ и дополнительные функции, такие как натальная карта и дневник предсказаний.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Как оплатить Premium?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Оплата происходит через Telegram Stars &mdash; встроенную валюту Telegram. Нажмите /premium в боте, выберите тариф и оплатите в два клика. Не нужно вводить данные карты. Или пригласите друзей через /ref и получите Premium бесплатно!
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Насколько точны предсказания?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Наши гороскопы генерируются на основе реальных астрологических данных (положение планет и лунные фазы). Расклады Таро используют классическую колоду Райдера-Уэйта с 78 картами и традиционные интерпретации. Натальная карта рассчитывается по астрономическим формулам на основе вашей даты, времени и места рождения.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Какие данные вы собираете?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Мы сохраняем только ваш знак зодиака и дату рождения (если вы решите рассчитать натальную карту). Эти данные используются исключительно для персонализации прогнозов. Мы не передаём данные третьим лицам.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Можно ли получить Premium бесплатно?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Да! Используйте реферальную программу: нажмите /ref в боте, поделитесь ссылкой с друзьями. За каждого нового пользователя вы получите +7 дней Premium. Пригласите 5 друзей &mdash; получите целый месяц бесплатно!
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Бот работает круглосуточно?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Да, бот доступен 24/7 без выходных. Ежедневная рассылка гороскопов отправляется в 9:00 по вашему времени. Все остальные функции доступны в любое время дня и ночи.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ CTA BOTTOM ═══════════ -->
+    <section class="cta-bottom">
+        <h2>Узнай, что говорят звёзды</h2>
+        <p>Присоединяйся к пользователям, которые каждый день начинают утро с гороскопа и карты Таро</p>
+        <a href="https://t.me/ezoterika_daily_bot" class="cta-button" target="_blank" rel="noopener">
+            Открыть бота в Telegram <span class="arrow">&rarr;</span>
+        </a>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer>
+        <p>&copy; 2026 Эзотерика Дейли &mdash; <a href="https://t.me/ezoterika_daily_bot">@ezoterika_daily_bot</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem; color: #475569;">
+            Гороскопы &bull; Расклады Таро &bull; Руны &bull; Нумерология &bull; Натальная карта &bull; Магический шар
+        </p>
+    </footer>
+
+</div>
+
+<!-- ═══════════ STARS ANIMATION JS ═══════════ -->
+<script>
+(function() {
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, stars = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = document.body.scrollHeight || window.innerHeight * 5;
+    }
+
+    function createStars(count) {
+        stars = [];
+        for (let i = 0; i < count; i++) {
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.5 + 0.3,
+                alpha: Math.random() * 0.8 + 0.2,
+                speed: Math.random() * 0.3 + 0.05,
+                phase: Math.random() * Math.PI * 2,
+            });
+        }
+    }
+
+    function draw(time) {
+        ctx.clearRect(0, 0, w, h);
+        for (const s of stars) {
+            const twinkle = Math.sin(time * 0.001 * s.speed + s.phase) * 0.3 + 0.7;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha * twinkle})`;
+            ctx.fill();
+        }
+        if (Math.random() < 0.002) {
+            const sx = Math.random() * w;
+            const sy = Math.random() * h * 0.5;
+            const len = Math.random() * 80 + 40;
+            const grad = ctx.createLinearGradient(sx, sy, sx + len, sy + len * 0.4);
+            grad.addColorStop(0, 'rgba(255,255,255,0.8)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(sx, sy);
+            ctx.lineTo(sx + len, sy + len * 0.4);
+            ctx.stroke();
+        }
+        requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => { resize(); createStars(250); });
+    resize();
+    createStars(250);
+    requestAnimationFrame(draw);
+})();
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+        const item = q.parentElement;
+        document.querySelectorAll('.faq-item.open').forEach(i => {
+            if (i !== item) i.classList.remove('open');
+        });
+        item.classList.toggle('open');
+    });
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        nav.style.background = 'rgba(10, 10, 26, 0.95)';
+    } else {
+        nav.style.background = 'rgba(10, 10, 26, 0.85)';
+    }
+});
+</script>
+
+</body>
+</html>

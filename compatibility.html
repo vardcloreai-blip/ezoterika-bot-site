@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Совместимость знаков зодиака — бесплатно 🔮</title>
+<meta name="description" content="Узнай совместимость знаков зодиака мгновенно. Любовь, дружба, работа. Бесплатный расчёт онлайн.">
+<meta property="og:title" content="🔮 Совместимость знаков зодиака">
+<meta property="og:description" content="Совместимы ли вы? Узнай за 10 секунд. Бесплатно.">
+<meta property="og:image" content="https://vardcloreai-blip.github.io/ezoterika-bot-site/preview.jpg">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d0d1a; color: #e0d7ff; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+  
+  .stars-bg { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+  .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: twinkle 3s infinite alternate; }
+  @keyframes twinkle { 0%{opacity:.1} 100%{opacity:.9} }
+  
+  .container { max-width: 700px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }
+  
+  h1 { text-align: center; font-size: 2rem; background: linear-gradient(135deg, #c084fc, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+  .subtitle { text-align: center; color: #9d7fcf; margin-bottom: 40px; }
+  
+  .card { background: rgba(26,10,46,0.9); border: 1px solid #4a1a8a; border-radius: 20px; padding: 32px; backdrop-filter: blur(10px); }
+  
+  .signs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .sign-btn { background: rgba(124,58,237,0.15); border: 1px solid #4a1a8a; border-radius: 10px; padding: 12px 6px; cursor: pointer; text-align: center; transition: all .2s; font-size: 0.85rem; color: #c084fc; }
+  .sign-btn:hover { background: rgba(124,58,237,0.4); border-color: #7c3aed; transform: translateY(-2px); }
+  .sign-btn.selected { background: #7c3aed; border-color: #a855f7; color: white; }
+  .sign-emoji { font-size: 1.6rem; display: block; }
+  
+  .divider { text-align: center; color: #7a3aff; margin: 24px 0; font-size: 1.2rem; }
+  
+  .calc-btn { width: 100%; background: linear-gradient(135deg, #7c3aed, #a855f7); border: none; border-radius: 12px; padding: 16px; font-size: 1.1rem; color: white; cursor: pointer; transition: all .2s; margin-top: 10px; }
+  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,0.5); }
+  .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  
+  .result { display: none; margin-top: 30px; animation: fadeIn .5s; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  
+  .score-ring { width: 130px; height: 130px; margin: 0 auto 20px; position: relative; }
+  .score-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .score-number { font-size: 2.2rem; font-weight: bold; color: #c084fc; }
+  .score-label { font-size: 0.75rem; color: #9d7fcf; }
+  
+  .compat-title { text-align: center; font-size: 1.4rem; margin-bottom: 8px; }
+  .compat-desc { text-align: center; color: #b0a0d0; margin-bottom: 24px; line-height: 1.6; }
+  
+  .aspects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .aspect { background: rgba(124,58,237,0.15); border: 1px solid #4a1a8a; border-radius: 12px; padding: 14px; text-align: center; }
+  .aspect-icon { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+  .aspect-name { font-size: 0.75rem; color: #9d7fcf; margin-bottom: 4px; }
+  .aspect-value { font-size: 1rem; font-weight: bold; color: #c084fc; }
+  
+  .bar-container { margin-bottom: 12px; }
+  .bar-label { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; }
+  .bar { height: 8px; background: rgba(124,58,237,0.2); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, #7c3aed, #c084fc); border-radius: 4px; transition: width 1s ease; }
+  
+  .cta { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(168,85,247,0.2)); border: 1px solid #7c3aed; border-radius: 14px; padding: 20px; text-align: center; margin-top: 20px; }
+  .cta p { color: #c084fc; margin-bottom: 12px; }
+  .cta a { display: inline-block; background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-weight: bold; }
+  
+  .share-btn { background: rgba(124,58,237,0.2); border: 1px solid #4a1a8a; border-radius: 8px; padding: 8px 16px; color: #c084fc; cursor: pointer; font-size: 0.85rem; margin-top: 12px; width: 100%; }
+  .share-btn:hover { background: rgba(124,58,237,0.4); }
+  
+  @media(max-width:480px) { .signs-grid{grid-template-columns:repeat(3,1fr)} .aspects{grid-template-columns:repeat(3,1fr)} h1{font-size:1.5rem} }
+</style>
+</head>
+<body>
+
+<div class="stars-bg" id="stars"></div>
+
+<div class="container">
+  <h1>🔮 Совместимость знаков</h1>
+  <p class="subtitle">Выбери два знака — получи честный расчёт</p>
+  
+  <div class="card">
+    <p style="color:#9d7fcf;margin-bottom:12px;font-size:.9rem">Твой знак:</p>
+    <div class="signs-grid" id="grid1"></div>
+    
+    <div class="divider">♥</div>
+    
+    <p style="color:#9d7fcf;margin-bottom:12px;font-size:.9rem">Знак партнёра:</p>
+    <div class="signs-grid" id="grid2"></div>
+    
+    <button class="calc-btn" id="calcBtn" onclick="calculate()" disabled>
+      🔮 Рассчитать совместимость
+    </button>
+    
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script>
+const SIGNS = [
+  {name:"Овен",emoji:"♈",key:"aries"},
+  {name:"Телец",emoji:"♉",key:"taurus"},
+  {name:"Близнецы",emoji:"♊",key:"gemini"},
+  {name:"Рак",emoji:"♋",key:"cancer"},
+  {name:"Лев",emoji:"♌",key:"leo"},
+  {name:"Дева",emoji:"♍",key:"virgo"},
+  {name:"Весы",emoji:"♎",key:"libra"},
+  {name:"Скорпион",emoji:"♏",key:"scorpio"},
+  {name:"Стрелец",emoji:"♐",key:"sagittarius"},
+  {name:"Козерог",emoji:"♑",key:"capricorn"},
+  {name:"Водолей",emoji:"♒",key:"aquarius"},
+  {name:"Рыбы",emoji:"♓",key:"pisces"},
+];
+
+// Матрица совместимости (0-100)
+const COMPAT = {
+  aries:{aries:65,taurus:50,gemini:80,cancer:40,leo:95,virgo:45,libra:70,scorpio:55,sagittarius:90,capricorn:45,aquarius:75,pisces:50},
+  taurus:{aries:50,taurus:75,gemini:45,cancer:85,leo:60,virgo:90,libra:65,scorpio:80,sagittarius:45,capricorn:92,aquarius:40,pisces:80},
+  gemini:{aries:80,taurus:45,gemini:70,cancer:50,leo:85,virgo:55,libra:88,scorpio:40,sagittarius:80,capricorn:40,aquarius:90,pisces:55},
+  cancer:{aries:40,taurus:85,gemini:50,cancer:78,leo:55,virgo:75,libra:50,scorpio:90,sagittarius:40,capricorn:75,aquarius:40,pisces:92},
+  leo:{aries:95,taurus:60,gemini:85,cancer:55,leo:72,virgo:45,libra:82,scorpio:50,sagittarius:88,capricorn:48,aquarius:72,pisces:50},
+  virgo:{aries:45,taurus:90,gemini:55,cancer:75,leo:45,virgo:68,libra:55,scorpio:78,sagittarius:48,capricorn:88,aquarius:50,pisces:70},
+  libra:{aries:70,taurus:65,gemini:88,cancer:50,leo:82,virgo:55,libra:72,scorpio:50,sagittarius:80,capricorn:58,aquarius:88,pisces:62},
+  scorpio:{aries:55,taurus:80,gemini:40,cancer:90,leo:50,virgo:78,libra:50,scorpio:80,sagittarius:45,capricorn:82,aquarius:45,pisces:88},
+  sagittarius:{aries:90,taurus:45,gemini:80,cancer:40,leo:88,virgo:48,libra:80,scorpio:45,sagittarius:75,capricorn:48,aquarius:85,pisces:50},
+  capricorn:{aries:45,taurus:92,gemini:40,cancer:75,leo:48,virgo:88,libra:58,scorpio:82,sagittarius:48,capricorn:80,aquarius:52,pisces:75},
+  aquarius:{aries:75,taurus:40,gemini:90,cancer:40,leo:72,virgo:50,libra:88,scorpio:45,sagittarius:85,capricorn:52,aquarius:78,pisces:55},
+  pisces:{aries:50,taurus:80,gemini:55,cancer:92,leo:50,virgo:70,libra:62,scorpio:88,sagittarius:50,capricorn:75,aquarius:55,pisces:80},
+};
+
+const TITLES = {
+  90:"🔥 Идеальное совпадение",80:"💜 Отличная совместимость",70:"✨ Хорошая пара",
+  60:"💫 Есть потенциал",50:"🌙 Нейтральные отношения",0:"⚡ Сложная динамика"
+};
+
+const DESCS = {
+  90:"Редкое явление — ваши знаки созданы друг для друга. Энергии дополняют и усиливают. Вместе вы непобедимы.",
+  80:"Сильная совместимость. Понимаете друг друга интуитивно, схожие ценности и взгляд на жизнь.",
+  70:"Хорошая основа для отношений. Есть точки роста — но взаимное притяжение сильнее разногласий.",
+  60:"Разные, но интересные друг другу. Нужно терпение, зато каждый учит партнёра чему-то новому.",
+  50:"Нейтральные отношения. Могут быть хорошими друзьями или коллегами, но в романтике придётся работать.",
+  0:"Непростая пара. Характеры сталкиваются, но при желании именно такие союзы дают самый мощный рост.",
+};
+
+let sel1 = null, sel2 = null;
+
+function buildGrid(id, selVar) {
+  const grid = document.getElementById(id);
+  SIGNS.forEach((s,i) => {
+    const btn = document.createElement('div');
+    btn.className = 'sign-btn';
+    btn.innerHTML = `<span class="sign-emoji">${s.emoji}</span>${s.name}`;
+    btn.onclick = () => {
+      grid.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      if(id === 'grid1') sel1 = s.key; else sel2 = s.key;
+      document.getElementById('calcBtn').disabled = !(sel1 && sel2);
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function getTitleDesc(score) {
+  const thresholds = [90,80,70,60,50,0];
+  for(const t of thresholds) if(score >= t) return {title: TITLES[t], desc: DESCS[t]};
+  return {title: TITLES[0], desc: DESCS[0]};
+}
+
+function calculate() {
+  if(!sel1 || !sel2) return;
+  const score = COMPAT[sel1][sel2];
+  const {title, desc} = getTitleDesc(score);
+  const s1 = SIGNS.find(s=>s.key===sel1);
+  const s2 = SIGNS.find(s=>s.key===sel2);
+  
+  // Частные показатели
+  const love = Math.min(100, score + Math.round((Math.random()-0.5)*20));
+  const friendship = Math.min(100, score + Math.round((Math.random()-0.5)*15));
+  const work = Math.min(100, score + Math.round((Math.random()-0.5)*25));
+  
+  const color = score >= 80 ? '#c084fc' : score >= 60 ? '#60a5fa' : score >= 40 ? '#fbbf24' : '#f87171';
+  
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:3rem;margin-bottom:8px">${s1.emoji} ♥ ${s2.emoji}</div>
+      <div style="font-size:1.1rem;color:#9d7fcf">${s1.name} + ${s2.name}</div>
+    </div>
+    
+    <div style="text-align:center;margin-bottom:20px">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="55" fill="none" stroke="rgba(124,58,237,0.2)" stroke-width="10"/>
+        <circle cx="65" cy="65" r="55" fill="none" stroke="${color}" stroke-width="10"
+          stroke-dasharray="${score * 3.456} 345.6" stroke-linecap="round"
+          transform="rotate(-90 65 65)" style="transition:stroke-dasharray 1s"/>
+        <text x="65" y="60" text-anchor="middle" fill="${color}" font-size="28" font-weight="bold">${score}%</text>
+        <text x="65" y="80" text-anchor="middle" fill="#9d7fcf" font-size="11">совместимость</text>
+      </svg>
+    </div>
+    
+    <div class="compat-title">${title}</div>
+    <div class="compat-desc">${desc}</div>
+    
+    <div class="aspects">
+      <div class="aspect"><span class="aspect-icon">❤️</span><div class="aspect-name">Любовь</div><div class="aspect-value">${love}%</div></div>
+      <div class="aspect"><span class="aspect-icon">🤝</span><div class="aspect-name">Дружба</div><div class="aspect-value">${friendship}%</div></div>
+      <div class="aspect"><span class="aspect-icon">💼</span><div class="aspect-name">Работа</div><div class="aspect-value">${work}%</div></div>
+    </div>
+    
+    <div class="bar-container"><div class="bar-label"><span>Эмоциональная связь</span><span>${love}%</span></div><div class="bar"><div class="bar-fill" style="width:${love}%"></div></div></div>
+    <div class="bar-container"><div class="bar-label"><span>Интеллектуальная совместимость</span><span>${friendship}%</span></div><div class="bar"><div class="bar-fill" style="width:${friendship}%"></div></div></div>
+    <div class="bar-container"><div class="bar-label"><span>Долгосрочный потенциал</span><span>${work}%</span></div><div class="bar"><div class="bar-fill" style="width:${work}%"></div></div></div>
+    
+    <div class="cta">
+      <p>🔮 Хочешь глубокий персональный анализ?<br><small style="color:#7a5aaf">Натальная карта, Таро, нумерология — всё бесплатно в боте</small></p>
+      <a href="https://t.me/ezoterika_daily_bot">Открыть бота →</a>
+    </div>
+    
+    <button class="share-btn" onclick="shareResult(${score},'${s1.name}','${s2.name}','${title}')">
+      📤 Поделиться результатом
+    </button>
+  `;
+  resultEl.scrollIntoView({behavior:'smooth'});
+}
+
+function shareResult(score, sign1, sign2, title) {
+  const text = `🔮 ${sign1} + ${sign2} = ${score}% совместимость!\n${title}\n\nПроверь свою пару → https://vardcloreai-blip.github.io/ezoterika-bot-site/compatibility.html`;
+  if(navigator.share) {
+    navigator.share({title: 'Совместимость знаков', text});
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('Скопировано! Поделись с друзьями 😊'));
+  }
+}
+
+// Создаём звёзды
+const starsEl = document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s;opacity:${Math.random()*0.7}`;
+  starsEl.appendChild(s);
+}
+
+buildGrid('grid1');
+buildGrid('grid2');
+</script>
+</body>
+</html>

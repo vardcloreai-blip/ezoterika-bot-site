@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эзотерика Daily</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #1a1a2e);
+            color: var(--tg-theme-text-color, #e0e0e0);
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #9b59b6, #e74c3c, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: var(--tg-theme-hint-color, #888);
+            font-size: 14px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .feature {
+            background: var(--tg-theme-secondary-bg-color, #16213e);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .feature:active { transform: scale(0.95); }
+        .feature .icon { font-size: 32px; margin-bottom: 8px; }
+        .feature .title { font-size: 14px; font-weight: 600; }
+        .feature .desc {
+            font-size: 11px;
+            color: var(--tg-theme-hint-color, #888);
+            margin-top: 4px;
+        }
+        .premium-block {
+            background: linear-gradient(135deg, #2d1b69, #1a1145);
+            border: 1px solid #6c3ce0;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .premium-block h2 {
+            font-size: 20px;
+            color: #a78bfa;
+            margin-bottom: 8px;
+        }
+        .premium-block p {
+            font-size: 13px;
+            color: #c4b5fd;
+            margin-bottom: 16px;
+        }
+        .premium-prices {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .price-btn {
+            background: #6c3ce0;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .price-btn:active { opacity: 0.8; }
+        .price-btn .period { display: block; font-size: 11px; opacity: 0.7; margin-top: 2px; }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 16px;
+            background: var(--tg-theme-secondary-bg-color, #16213e);
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+        .stat { text-align: center; }
+        .stat .num { font-size: 24px; font-weight: 700; color: #a78bfa; }
+        .stat .label { font-size: 11px; color: var(--tg-theme-hint-color, #888); }
+        .open-bot {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--tg-theme-button-color, #6c3ce0);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Эзотерика Daily</h1>
+        <p>Гороскопы, Таро, Руны, Нумерология</p>
+    </div>
+
+    <div class="features">
+        <div class="feature" onclick="openBot('/horoscope')">
+            <div class="icon">&#9733;</div>
+            <div class="title">Гороскоп</div>
+            <div class="desc">12 знаков зодиака</div>
+        </div>
+        <div class="feature" onclick="openBot('/tarot')">
+            <div class="icon">&#127183;</div>
+            <div class="title">Таро</div>
+            <div class="desc">22 аркана</div>
+        </div>
+        <div class="feature" onclick="openBot('/rune')">
+            <div class="icon">&#5765;</div>
+            <div class="title">Руны</div>
+            <div class="desc">24 руны Футарка</div>
+        </div>
+        <div class="feature" onclick="openBot('/numerology')">
+            <div class="icon">&#128290;</div>
+            <div class="title">Нумерология</div>
+            <div class="desc">Число судьбы</div>
+        </div>
+        <div class="feature" onclick="openBot('/compatibility')">
+            <div class="icon">&#10084;</div>
+            <div class="title">Совместимость</div>
+            <div class="desc">Любовь и дружба</div>
+        </div>
+        <div class="feature" onclick="openBot('/dream')">
+            <div class="icon">&#127769;</div>
+            <div class="title">Сонник</div>
+            <div class="desc">AI-толкование снов</div>
+        </div>
+        <div class="feature" onclick="openBot('/ask_tarolog')">
+            <div class="icon">&#128302;</div>
+            <div class="title">AI Таролог</div>
+            <div class="desc">Виктория ответит</div>
+        </div>
+        <div class="feature" onclick="openBot('/my_profile')">
+            <div class="icon">&#128100;</div>
+            <div class="title">Астро-профиль</div>
+            <div class="desc">Полный разбор</div>
+        </div>
+    </div>
+
+    <div class="premium-block">
+        <h2>Premium</h2>
+        <p>Безлимитные расклады, AI-таролог, дайджест, эксклюзивный контент</p>
+        <div class="premium-prices">
+            <button class="price-btn" onclick="buyPremium('week')">
+                90 Stars<span class="period">неделя</span>
+            </button>
+            <button class="price-btn" onclick="buyPremium('month')">
+                179 Stars<span class="period">месяц</span>
+            </button>
+            <button class="price-btn" onclick="buyPremium('year')">
+                1199 Stars<span class="period">год</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="num">80+</div>
+            <div class="label">команд</div>
+        </div>
+        <div class="stat">
+            <div class="num">12+</div>
+            <div class="label">модулей</div>
+        </div>
+        <div class="stat">
+            <div class="num">3</div>
+            <div class="label">языка</div>
+        </div>
+    </div>
+
+    <button class="open-bot" onclick="openBot('/start')">Открыть бота</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        function openBot(command) {
+            tg.openTelegramLink('https://t.me/ezoterika_daily_bot?start=' + command.replace('/', ''));
+            tg.close();
+        }
+
+        function buyPremium(period) {
+            tg.openTelegramLink('https://t.me/ezoterika_daily_bot?start=premium_' + period);
+            tg.close();
+        }
+    </script>
+</body>
+</html>
